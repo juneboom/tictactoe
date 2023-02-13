@@ -13,4 +13,4 @@ This was a great refresher on how to manage React components and how relationshi
 Extra challenges to improve the game:
 
 - Display the location for each move in the move history list
-- Highlight the three squares that caused a win
+- Highlight the three squares that caused a win ✅

@@ -6,7 +6,7 @@ import './index.css';
   function Square(props){
     return (
         <button 
-          className="square" 
+          className={"square " + (props.isWinnerSquare ? 'win' : '')} 
           onClick={props.onClick}
         >
           {props.value}
@@ -16,15 +16,27 @@ import './index.css';
   
   class Board extends React.Component {
     renderSquare(i) {
+      //check if square is one of the winning moves
+      const line = this.props.winningLine;
+      let findMatch = false;
+      if (line){
+        line.forEach(element => {
+          if (element === i){
+            findMatch = true;
+          }
+        });
+      }
+  
       return (
         <Square 
           value={this.props.squares[i]}
           onClick={() => this.props.onClick(i)}
+          isWinnerSquare={findMatch}
         />
       )
     }
-  
-    render() {
+
+    render() { 
       return (
         <div>
           <div className="board-row">
@@ -89,7 +101,8 @@ import './index.css';
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
-
+      const line = (winner ? winner.line : null);
+      
       const moves = history.map((step, move) => {
         const desc = move ? 
           'Go to move #' + move :
@@ -103,7 +116,7 @@ import './index.css';
 
       let status;
       if (winner){
-        status = 'Winner: ' + winner;
+        status = 'Winner: ' + winner.square;
       } else {
         status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
       }
@@ -114,6 +127,7 @@ import './index.css';
             <Board 
               squares={current.squares}
               onClick={(i) => this.handleClick(i)}
+              winningLine={line}
             />
           </div>
           <div className="game-info">
@@ -140,7 +154,12 @@ import './index.css';
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        //TO DO: determine which rows to highlight
+        const winner = {
+          square: squares[a], 
+          line: lines[i],
+        }
+        return winner;
       }
     }
     return null;

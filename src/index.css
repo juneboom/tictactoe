@@ -49,3 +49,8 @@ ul {
 .game-info {
     margin-left: 20px;
 }
+
+/* add to moves squares that won the game */
+.win {
+    color: red;
+}
